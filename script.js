@@ -1,27 +1,48 @@
-// Refrigerant PT Data (Example Values)
+// Refrigerant PT Data (Sample Values)
 const ptCharts = {
   R410a: {
-    "-40": 11.8,
-    "-20": 31.1,
-    "0": 57.7,
-    "20": 93.3,
-    "40": 139.1,
+    100: 32,  // Example: Pressure (psi): Saturation Temp (°F)
+    150: 45,
+    200: 55,
+    250: 65,
+    300: 75,
   },
   R32: {
-    "-40": 14.7,
-    "-20": 36.2,
-    "0": 65.3,
-    "20": 104.5,
-    "40": 155.2,
+    100: 30,
+    150: 44,
+    200: 56,
+    250: 68,
+    300: 80,
   },
   R454b: {
-    "-40": 10.5,
-    "-20": 29.3,
-    "0": 55.4,
-    "20": 91.6,
-    "40": 138.3,
+    100: 28,
+    150: 42,
+    200: 54,
+    250: 66,
+    300: 78,
   },
 };
+
+// Function to calculate saturation temperature from PT chart
+function getSaturationTemperature(refrigerant, pressure) {
+  const chart = ptCharts[refrigerant];
+  const pressures = Object.keys(chart).map(Number);
+  
+  // Find the closest matching pressures
+  const lowerPressure = Math.max(...pressures.filter((p) => p <= pressure));
+  const upperPressure = Math.min(...pressures.filter((p) => p >= pressure));
+  
+  if (lowerPressure === upperPressure) {
+    return chart[lowerPressure];
+  }
+  
+  // Linear interpolation for pressures not directly in the chart
+  const lowerTemp = chart[lowerPressure];
+  const upperTemp = chart[upperPressure];
+  const interpolatedTemp =
+    lowerTemp + ((pressure - lowerPressure) * (upperTemp - lowerTemp)) / (upperPressure - lowerPressure);
+  return interpolatedTemp;
+}
 
 // HVAC Calculator
 function calculateHVAC() {
@@ -36,10 +57,13 @@ function calculateHVAC() {
     return;
   }
 
-  // Example offsets for refrigerants
-  const offset = refrigerant === "R410a" ? 1.5 : refrigerant === "R32" ? 1.8 : 2.0;
-  const superheat = vaporTemp - vaporPressure * offset;
-  const subcooling = liquidPressure * offset - liquidTemp;
+  // Get saturation temperatures
+  const vaporSaturationTemp = getSaturationTemperature(refrigerant, vaporPressure);
+  const liquidSaturationTemp = getSaturationTemperature(refrigerant, liquidPressure);
+
+  // Calculate superheat and subcooling
+  const superheat = vaporTemp - vaporSaturationTemp;
+  const subcooling = liquidSaturationTemp - liquidTemp;
 
   document.getElementById("hvac-result").textContent = 
     `Superheat: ${superheat.toFixed(2)}°F, Subcooling: ${subcooling.toFixed(2)}°F`;
@@ -65,8 +89,8 @@ function showPTChart() {
   const refrigerant = document.getElementById("pt-refrigerant").value;
   const chartData = ptCharts[refrigerant];
   let output = `PT Chart for ${refrigerant}:\n`;
-  for (const temp in chartData) {
-    output += `Temperature: ${temp}°F, Pressure: ${chartData[temp]} psi\n`;
+  for (const [pressure, temp] of Object.entries(chartData)) {
+    output += `Pressure: ${pressure} psi, Temperature: ${temp}°F\n`;
   }
   document.getElementById("pt-chart").textContent = output;
 }
