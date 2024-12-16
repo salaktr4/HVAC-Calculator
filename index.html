@@ -1,41 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HVAC Calculator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HVAC Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>HVAC Calculator</h1>
-    </header>
-    <main>
-        <section>
-            <h2>Superheat and Subcooling Calculator</h2>
-            <label for="refrigerant">Select Refrigerant:</label>
-            <select id="refrigerant">
-                <option value="R410a">R410a</option>
-                <option value="R32">R32</option>
-                <option value="454b">454b</option>
-            </select>
-            <label for="temperature">Temperature (°F):</label>
-            <input type="number" id="temperature">
-            <label for="pressure">Pressure (psi):</label>
-            <input type="number" id="pressure">
-            <button onclick="calculateHVAC()">Calculate</button>
-            <p id="hvac-result"></p>
-        </section>
-        <section>
-            <h2>Capacitor Value Calculator</h2>
-            <label for="amps">Start Winding Amps:</label>
-            <input type="number" id="amps">
-            <label for="voltage">Capacitor Voltage (V):</label>
-            <input type="number" id="voltage">
-            <button onclick="calculateCapacitor()">Calculate</button>
-            <p id="capacitor-result"></p>
-        </section>
-    </main>
-    <script src="script.js"></script>
+  <header>
+    <h1>HVAC Calculator</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Superheat and Subcooling Calculator</h2>
+      <label for="refrigerant">Select Refrigerant:</label>
+      <select id="refrigerant">
+        <option value="R410a">R410a</option>
+        <option value="R32">R32</option>
+        <option value="R454b">R454b</option>
+      </select>
+      <label for="vapor-pressure">Vapor Line Pressure (psi):</label>
+      <input type="number" id="vapor-pressure">
+      <label for="vapor-temperature">Vapor Line Temperature (°F):</label>
+      <input type="number" id="vapor-temperature">
+      <label for="liquid-pressure">Liquid Line Pressure (psi):</label>
+      <input type="number" id="liquid-pressure">
+      <label for="liquid-temperature">Liquid Line Temperature (°F):</label>
+      <input type="number" id="liquid-temperature">
+      <button onclick="calculateHVAC()">Calculate</button>
+      <p id="hvac-result"></p>
+    </section>
+
+    <section>
+      <h2>Capacitor Value Calculator</h2>
+      <label for="amps">Start Winding Amps:</label>
+      <input type="number" id="amps">
+      <label for="voltage">Capacitor Voltage (V):</label>
+      <input type="number" id="voltage">
+      <button onclick="calculateCapacitor()">Calculate</button>
+      <p id="capacitor-result"></p>
+    </section>
+
+    <section>
+      <h2>PT Chart Lookup</h2>
+      <label for="pt-refrigerant">Select Refrigerant:</label>
+      <select id="pt-refrigerant">
+        <option value="R410a">R410a</option>
+        <option value="R32">R32</option>
+        <option value="R454b">R454b</option>
+      </select>
+      <button onclick="showPTChart()">Show PT Chart</button>
+      <pre id="pt-chart"></pre>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>
